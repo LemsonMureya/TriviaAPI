@@ -43,6 +43,7 @@ for i in data:
     # list all answer choices
     # print them in a random order'])
     list_i = [i['correctAnswer']] + i['incorrectAnswers']
+
     a = random.choice(list_i)
     list_i.remove(a)
     b = random.choice(list_i)
@@ -50,7 +51,18 @@ for i in data:
     c = random.choice(list_i)
     list_i.remove(c)
     d = list_i[0]
-# prompt user to select an option    
+
+    #determine which choice is the right answer
+    if i['correctAnswer'] == a:
+        correct = 'a'
+    elif i['correctAnswer'] == b:
+        correct = 'b'
+    elif i['correctAnswer'] == c:
+        correct = 'c'
+    else:
+        correct = 'd'
+      
+    # prompt user to select an option    
     print(f" (a) {a}")
     print(f" (b) {b}")
     print(f" (c) {c}")
@@ -58,3 +70,7 @@ for i in data:
 
     # test if user gives correct input,
     answer = input("please choose an answer: ")
+    if answer == correct:
+      score+=1
+    else:
+      print(f"Wrong Correct Answer: {i['correctAnswer']}")
