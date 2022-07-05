@@ -10,14 +10,14 @@ score = 0
 total = 10
 
 
-#Testing function examples
+# Testing function examples
 def func1(x):
   x = x-1
   return x
 
+
 def func2(x,y):
   return x+y
-
 
 
 # user can choose number of questions(up to 20)
@@ -56,6 +56,5 @@ for i in data:
     print(f" (c) {c}")
     print(f" (d) {d}")
 
-    
     # test if user gives correct input,
     answer = input("please choose an answer: ")
