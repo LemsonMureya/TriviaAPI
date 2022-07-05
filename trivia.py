@@ -9,6 +9,17 @@ data = response.json()
 score = 0
 total = 10
 
+
+#Testing function examples
+def func1(x):
+  x = x-1
+  return x
+
+def func2(x,y):
+  return x+y
+
+
+
 # user can choose number of questions(up to 20)
 # desired difficulty (easy, medium, hard), and question category
 
