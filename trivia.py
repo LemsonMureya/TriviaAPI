@@ -7,6 +7,7 @@ data = response.json()
 score = 0
 total = 10
 
+
 #Testing function examples
 def func1(x):
   x = x-1
