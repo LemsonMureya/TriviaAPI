@@ -1,5 +1,7 @@
 import requests
 import random
+import time
+
 # https://the-trivia-api.com/
 url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
 response = requests.get(url)
@@ -19,17 +21,17 @@ total = 10
 # data is a list where each element is a dictionary for each question
 # ( has the question, the correct answers and incorrectAnswers)
 
-#iterate through each question's dictionary 
+# iterate through each question's dictionary
 for i in data:
     print()
     print(f"Score : {score} / 10")
 
-  # print question    
-    print (i['question'])
+    # print question    
+    print(i['question'])
 
-  # list all answer choices
-  # print them in a random order'])
-    list_i = [i['correctAnswer']]+ i['incorrectAnswers']
+    # list all answer choices
+    # print them in a random order'])
+    list_i = [i['correctAnswer']] + i['incorrectAnswers']
     a = random.choice(list_i)
     list_i.remove(a)
     b = random.choice(list_i)
@@ -43,7 +45,6 @@ for i in data:
     print(f" (c) {c}")
     print(f" (d) {d}")
 
-  # test if user gives correct input,
+    
+    # test if user gives correct input,
     answer = input("please choose an answer: ")
-
-
