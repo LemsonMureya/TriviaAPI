@@ -33,14 +33,15 @@ total = 10
 # global variable used for the countdown
 count = True 
 
+
 # Testing function examples
 def func1(x):
-    x = x-1
+    x = x - 1
     return x
 
 
-def func2(x,y):
-    return x+y
+def func2(x, y):
+    return x + y
 
 
 # run the countdown for each question
@@ -53,74 +54,10 @@ def runn():
         time.sleep(1)  # sleep one second
         if count is False:
             break
-        print('\r'+str(i) + ' ', end = '', flush = True) #update timer
+        print('\r' + str(i) + ' ', end = '', flush = True)  # update timer
 
 
-for i in data:
-    print()
-    print("********************************")
-    print(f"Score : {score} / 10")  # change this, it will not always be out of 10 // get_questions function
 
-    # print question    
-    print(i['question'])
-
-    # list all answer choices
-    # print them in a random order'])
-    list_i = [i['correctAnswer']] + i['incorrectAnswers']
-
-    a = random.choice(list_i)
-    list_i.remove(a)
-    b = random.choice(list_i)
-    list_i.remove(b)
-    c = random.choice(list_i)
-    list_i.remove(c)
-    d = list_i[0]
-
-    # determine which choice is the right answer
-    if i['correctAnswer'] == a:
-        correct = 'a'
-    elif i['correctAnswer'] == b:
-        correct = 'b'
-    elif i['correctAnswer'] == c:
-        correct = 'c'
-    else:
-        correct = 'd'
-      
-    # prompt user to select an option    
-    print(f" (a) {a}")
-    print(f" (b) {b}")
-    print(f" (c) {c}")
-    print(f" (d) {d}")
-    print(f" press \"q\" to quit")
-    #or r to restart
-
-    # start the countdown
-    t = Thread(target=runn)
-    t.start()
-  
-    # the user has 15 seconds
-    answer, timedOut = timedInput(timeout = 16) 
-    count = False
-    print()
-
-    # test if user gives correct input,
-
-    if timedOut: # if ran out of time
-        print("Sorry you ran out of time!")
-        print(f"Correct Answer: {i['correctAnswer']}")
-    elif answer == correct: # if correct
-        score+=1
-        print("Congratulations you are correct!")
-    elif answer == 'q': #to quit
-       break;
-    else: #if incorrect
-        print("Wrong! :(")
-        print(f"Correct Answer: {i['correctAnswer']}")
-    print("********************************")
-    time.sleep(2)
-    count = True;
-
-print(f"Your Score is: {score}/{total}")
 
 # display categories
 def print_categories():
@@ -147,9 +84,9 @@ def get_category():
         try:
             response = input("Please choose a category: ")
             response = int(response)
-            category = categories[response] #if int, use as index to get category
-            check_integer = False #end the loop if successful
-        except: # if the input is not a number or not in the range 0-9, continue loop
+            category = categories[response]  # if int, use as index to get category
+            check_integer = False  # end the loop if successful
+        except:  # if the input is not a number or not in the range 0-9, continue loop
             print('Please input a number 0-9')
     return category
 
@@ -183,7 +120,7 @@ def create_quiz(category, difficulty, questions):
 def run_quiz(quiz,total):
     score = 0
     total = total
-    global count #boolean used for countdown
+    global count  # boolean used for countdown
     for i in quiz:
         print()
         print("********************************")
@@ -237,9 +174,9 @@ def run_quiz(quiz,total):
         elif answer == correct: # if correct
             score+=1
             print("Congratulations you are correct!")
-        elif answer == 'q': #to quit
+        elif answer == 'q': # to quit
           break;
-        else: #if incorrect
+        else: # if incorrect
             print("Wrong! :(")
             print(f"Correct Answer: {i['correctAnswer']}")
         print("********************************")
@@ -258,10 +195,10 @@ def compare_answers(response, correct_answer):
 
 if __name__ == '__main__':
     # testing 
-    # category = get_category()
-    # difficulty = get_difficulty()
-    # questions = get_questions()
-    # quiz = create_quiz(category, difficulty, questions)
-    quiz = create_quiz('arts_and_literature', 'easy', '10')
-    #run_quiz(quiz, int(questions))
-    run_quiz(quiz, 11)
+    category = get_category()
+    difficulty = get_difficulty()
+    questions = get_questions()
+    quiz = create_quiz(category, difficulty, questions)
+    #quiz = create_quiz('arts_and_literature', 'easy', '10')
+    run_quiz(quiz, int(questions))
+    # run_quiz(quiz, 11)
