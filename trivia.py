@@ -22,11 +22,12 @@ from pytimedinput import timedKey
 # iterate through each question's dictionary
 
 # this is an example url and quiz
-url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
+url = 'https://the-trivia-api.com/api/' \
++ 'questions?categories=science&limit=10&region=US&difficulty=medium'
 response = requests.get(url)
 data = response.json()
 score = 0
-total = 10 
+total = 10
 # end of example
 
 # global variable used for the countdown
@@ -34,24 +35,25 @@ count = True
 
 # Testing function examples
 def func1(x):
-  x = x-1
-  return x
+    x = x-1
+    return x
 
 
 def func2(x,y):
-  return x+y
+    return x+y
+
 
 # run the countdown for each question
 def runn():
-    i=15
+    i = 15
     print('Choose an Answer: ')
     print(i, end = '')
-    while i>=0:
-        i-=1
-        time.sleep(1) #sleep one second
-        if count == False:
-          break;
-        print('\r'+str(i)+ ' ', end='', flush=True) #update timer
+    while i >= 0:
+        i -= 1
+        time.sleep(1)  # sleep one second
+        if count is False:
+            break
+        print('\r'+str(i) + ' ', end = '', flush = True) #update timer
 
 
 # display categories
@@ -65,15 +67,15 @@ def print_categories():
       4- Geography               9- Sports & Leisure
 
       ''')
-  
+
 
 # get category selection and return it
 def get_category():
     print_categories()
     categories = ['arts_and_literature', 'film_and_tv', 'food_and_drink', 'general_knowledge', 'geography',
-        'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
+                  'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
     
-    #get response and check if it is an integer
+    # get response and check if it is an integer
     check_integer = True
     while check_integer:
         try:
@@ -82,7 +84,7 @@ def get_category():
             category = categories[response] #if int, use as index to get category
             check_integer = False #end the loop if successful
         except: # if the input is not a number or not in the range 0-9, continue loop
-              print('Please input a number 0-9')
+            print('Please input a number 0-9')
     return category
 
 # get the difficulty (easy, medium, hard) and return it
@@ -96,8 +98,8 @@ def get_questions():
 # create the quiz and returns the list of questions
 def create_quiz(category, difficulty, questions):
     url = 'https://the-trivia-api.com/api/questions?categories=' \
-    + category +'&limit=' \
-    + questions + '&region=US&difficulty=' + difficulty
+        + category +'&limit=' \
+        + questions + '&region=US&difficulty=' + difficulty
     response = requests.get(url)
     data = response.json()
     return data
