@@ -4,6 +4,9 @@ import time
 from threading import Thread
 from pytimedinput import timedInput
 from pytimedinput import timedKey
+import sqlalchemy as db
+import pandas as pd
+import copy
 # install pytimedinput!!!
 
 # https://the-trivia-api.com/
@@ -22,42 +25,40 @@ from pytimedinput import timedKey
 # iterate through each question's dictionary
 
 # this is an example url and quiz
-url = 'https://the-trivia-api.com/api/' \
-+ 'questions?categories=science&limit=10&region=US&difficulty=medium'
-response = requests.get(url)
-data = response.json()
-score = 0
-total = 10
-# end of example
 
-# global variable used for the countdown
-count = True 
+
+# url = 'https://the-trivia-api.com/api/' \
+# + 'questions?categories=science&limit=10&region=US&difficulty=medium'
+# response = requests.get(url)
+# data = response.json()
+# score = 0
+# total = 10
+# # end of example
 
 
 # Testing function examples
+
 def func1(x):
     x = x - 1
     return x
 
-
 def func2(x, y):
     return x + y
 
-
+# # global variable used for the countdown
+count = True 
 # run the countdown for each question
 def runn():
     i = 15
     print('Choose an Answer: ')
     print(i, end = '')
-    while i >= 0:
-        i -= 1
-        time.sleep(1)  # sleep one second
-        if count is False:
-            break
-        print('\r' + str(i) + ' ', end = '', flush = True)  # update timer
 
-
-
+    while i>=0:
+        i-=1
+        time.sleep(1) #sleep one second
+        if count == False:
+          break;
+        print('\r'+str(i)+ ' ', end='', flush=True) #update timer
 
 # display categories
 def print_categories():
@@ -95,15 +96,19 @@ def get_difficulty():
     
     difficulty_choices = { "1": "easy", "2" : "medium" , "3" : "hard"}
 
-    chosen_difficulty = input("Please select difficulty: 1-3 ")
-    print(" 1. Easy \n 2. Medium \n 3. Hard")
+    chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+    while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
+      chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
     
     difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
     return difficulty
 # get input on the number of questions and return it
 def get_questions():
     
-    questions = input("How many questions would you like to answer?: ")
+    question = input("How many questions would you like to answer?: 1-20 ")
+    while int(question) > 21 or int(question) < 0:
+      question = input("How many questions would you like to answer?: 1-20 ")
+    questions = str(question)
     return questions
 
 # create the quiz and returns the list of questions
@@ -119,8 +124,9 @@ def create_quiz(category, difficulty, questions):
 # takes the list of questions as parameter and runs the quiz
 def run_quiz(quiz,total):
     score = 0
-    total = total
-    global count  # boolean used for countdown
+    total = questions
+    global count #boolean used for countdown
+
     for i in quiz:
         print()
         print("********************************")
@@ -192,6 +198,25 @@ def compare_answers(response, correct_answer):
     pass
     # print the many different responses
 
+def make_database(data):
+    for question in data:
+        incorrect = question['incorrectAnswers']
+        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+    df = pd.DataFrame(data)
+    del df['type']
+    del df['id']
+    del df['tags']
+    del df['difficulty']
+    del df['regions']
+    
+    #print(df)
+    engine = db.create_engine('sqlite:///trivia.db')
+    df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
+    # print(pd.DataFrame(query_result))
+
+def update_database(data):
+    pass
 
 if __name__ == '__main__':
     # testing 
@@ -199,6 +224,6 @@ if __name__ == '__main__':
     difficulty = get_difficulty()
     questions = get_questions()
     quiz = create_quiz(category, difficulty, questions)
-    #quiz = create_quiz('arts_and_literature', 'easy', '10')
+    # quiz = create_quiz('arts_and_literature', 'easy', '10')
     run_quiz(quiz, int(questions))
-    # run_quiz(quiz, 11)
+    make_database(copy.deepcopy(quiz))
