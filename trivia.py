@@ -22,25 +22,26 @@ from pytimedinput import timedKey
 # iterate through each question's dictionary
 
 # this is an example url and quiz
-url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
-response = requests.get(url)
-data = response.json()
-score = 0
-total = 10 
-# end of example
+# url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
+# response = requests.get(url)
+# data = response.json()
+# score = 0
+# total = 10 
+# # end of example
 
-# global variable used for the countdown
-count = True 
+
 
 # Testing function examples
-def func1(x):
-  x = x-1
-  return x
+# def func1(x):
+#   x = x-1
+#   return x
 
 
-def func2(x,y):
-  return x+y
+# def func2(x,y):
+#   return x+y
 
+# # global variable used for the countdown
+count = True 
 # run the countdown for each question
 def runn():
     i=15
@@ -52,73 +53,6 @@ def runn():
         if count == False:
           break;
         print('\r'+str(i)+ ' ', end='', flush=True) #update timer
-
-
-for i in data:
-    print()
-    print("********************************")
-    print(f"Score : {score} / 10")  # change this, it will not always be out of 10 // get_questions function
-
-    # print question    
-    print(i['question'])
-
-    # list all answer choices
-    # print them in a random order'])
-    list_i = [i['correctAnswer']] + i['incorrectAnswers']
-
-    a = random.choice(list_i)
-    list_i.remove(a)
-    b = random.choice(list_i)
-    list_i.remove(b)
-    c = random.choice(list_i)
-    list_i.remove(c)
-    d = list_i[0]
-
-    # determine which choice is the right answer
-    if i['correctAnswer'] == a:
-        correct = 'a'
-    elif i['correctAnswer'] == b:
-        correct = 'b'
-    elif i['correctAnswer'] == c:
-        correct = 'c'
-    else:
-        correct = 'd'
-      
-    # prompt user to select an option    
-    print(f" (a) {a}")
-    print(f" (b) {b}")
-    print(f" (c) {c}")
-    print(f" (d) {d}")
-    print(f" press \"q\" to quit")
-    #or r to restart
-
-    # start the countdown
-    t = Thread(target=runn)
-    t.start()
-  
-    # the user has 15 seconds
-    answer, timedOut = timedInput(timeout = 16) 
-    count = False
-    print()
-
-    # test if user gives correct input,
-
-    if timedOut: # if ran out of time
-        print("Sorry you ran out of time!")
-        print(f"Correct Answer: {i['correctAnswer']}")
-    elif answer == correct: # if correct
-        score+=1
-        print("Congratulations you are correct!")
-    elif answer == 'q': #to quit
-       break;
-    else: #if incorrect
-        print("Wrong! :(")
-        print(f"Correct Answer: {i['correctAnswer']}")
-    print("********************************")
-    time.sleep(2)
-    count = True;
-
-print(f"Your Score is: {score}/{total}")
 
 # display categories
 def print_categories():
@@ -156,15 +90,19 @@ def get_difficulty():
     
     difficulty_choices = { "1": "easy", "2" : "medium" , "3" : "hard"}
 
-    chosen_difficulty = input("Please select difficulty: 1-3 ")
-    print(" 1. Easy \n 2. Medium \n 3. Hard")
+    chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+    while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
+      chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
     
     difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
     return difficulty
 # get input on the number of questions and return it
 def get_questions():
     
-    questions = input("How many questions would you like to answer?: ")
+    question = input("How many questions would you like to answer?: 1-20 ")
+    while int(question) > 21 or int(question) < 0:
+      question = input("How many questions would you like to answer?: 1-20 ")
+    questions = str(question)
     return questions
 
 # create the quiz and returns the list of questions
@@ -180,7 +118,7 @@ def create_quiz(category, difficulty, questions):
 # takes the list of questions as parameter and runs the quiz
 def run_quiz(quiz,total):
     score = 0
-    total = total
+    total = questions
     global count #boolean used for countdown
     for i in quiz:
         print()
@@ -256,10 +194,10 @@ def compare_answers(response, correct_answer):
 
 if __name__ == '__main__':
     # testing 
-    # category = get_category()
-    # difficulty = get_difficulty()
-    # questions = get_questions()
-    # quiz = create_quiz(category, difficulty, questions)
-    quiz = create_quiz('arts_and_literature', 'easy', '10')
+    category = get_category()
+    difficulty = get_difficulty()
+    questions = get_questions()
+    quiz = create_quiz(category, difficulty, questions)
+    # quiz = create_quiz('arts_and_literature', 'easy', '10')
     #run_quiz(quiz, int(questions))
-    run_quiz(quiz, 11)
+    run_quiz(quiz, questions)
