@@ -4,6 +4,9 @@ import time
 from threading import Thread
 from pytimedinput import timedInput
 from pytimedinput import timedKey
+import sqlalchemy as db
+import pandas as pd
+import copy
 # install pytimedinput!!!
 
 # https://the-trivia-api.com/
@@ -195,6 +198,25 @@ def compare_answers(response, correct_answer):
     pass
     # print the many different responses
 
+def make_database(data):
+    for question in data:
+        incorrect = question['incorrectAnswers']
+        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+    df = pd.DataFrame(data)
+    del df['type']
+    del df['id']
+    del df['tags']
+    del df['difficulty']
+    del df['regions']
+    
+    #print(df)
+    engine = db.create_engine('sqlite:///trivia.db')
+    df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
+    # print(pd.DataFrame(query_result))
+
+def update_database(data):
+    pass
 
 if __name__ == '__main__':
     # testing 
@@ -203,8 +225,5 @@ if __name__ == '__main__':
     questions = get_questions()
     quiz = create_quiz(category, difficulty, questions)
     # quiz = create_quiz('arts_and_literature', 'easy', '10')
-    #run_quiz(quiz, int(questions))
-    #quiz = create_quiz('arts_and_literature', 'easy', '10')
     run_quiz(quiz, int(questions))
-    # run_quiz(quiz, 11)
-
+    make_database(copy.deepcopy(quiz))
