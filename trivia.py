@@ -20,7 +20,7 @@ from pytimedinput import timedInput
 
 # iterate through each question's dictionary
 
-# this is an example url and quiz
+this is an example url and quiz
 url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
 response = requests.get(url)
 data = response.json()
@@ -56,7 +56,7 @@ def runn():
 for i in data:
     print()
     print("********************************")
-    print(f"Score : {score} / 10")  # change this, it will not always be out of 10
+    print(f"Score : {score} / 10")  # change this, it will not always be out of 10 // get_questions function
 
     # print question    
     print(i['question'])
@@ -89,6 +89,7 @@ for i in data:
     print(f" (c) {c}")
     print(f" (d) {d}")
     print(f" press \"q\" to quit")
+    #or r to restart
 
     # start the countdown
     t = Thread(target=runn)
@@ -128,15 +129,25 @@ def get_category():
 
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
-    pass
+    
+    difficulty_choices = { "1": "easy", "2" : "medium" , "3" : "hard"}
 
+    chosen_difficulty = input("Please select difficulty: 1-3 ")
+    print(" 1. Easy \n 2. Medium \n 3. Hard")
+    
+    difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
+    return difficulty
 # get input on the number of questions and return it
 def get_questions():
-    pass
+    
+    questions = input("How many questions would you like to answer?: ")
+    return questions
 
 # create the quiz and returns the list of questions
 def create_quiz(category, difficulty, questions):
     pass
+    # base_url = "https://the-trivia-api.com/api/"
+    # url_concat = base_url+"questions?"+"categories="+categories+"&limit="+questions+"&region=US&difficulty="+difficulty
 
 # takes the list of questions as parameter and runs the quiz
 def run_quiz(quiz):
