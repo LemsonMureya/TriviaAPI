@@ -119,11 +119,15 @@ def get_difficulty():
     
     difficulty_choices = { "1": "easy", "2": "medium" , "3": "hard"}
 
-    chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
-    while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-      chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
-    
-    difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
+    check_difficulty = True
+    while check_difficulty:
+        try:
+            chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+            # chosen_difficulty = int(choice)
+            difficulty = difficulty_choices[chosen_difficulty] #gets the corresponing difficulty level// test for invalid input
+            check_difficulty = False
+        except:
+            print('Please input a number 1-3')
     return difficulty
 
 
@@ -251,20 +255,6 @@ def make_database(data):
 
 def update_database(data):
     pass
-   
-
-
-
-
-# if __name__ == '__main__':
-#     # testing 
-#     category = get_category()
-#     difficulty = get_difficulty()
-#     questions = get_questions()
-#     quiz = create_quiz(category, difficulty, questions)
-#     # quiz = create_quiz('arts_and_literature', 'easy', '10')
-#     run_quiz(quiz, int(questions))
-#     make_database(copy.deepcopy(quiz))
 
 
 
