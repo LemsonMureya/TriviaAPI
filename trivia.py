@@ -52,14 +52,14 @@ count = True
 def runn():
     i = 15
     print('Choose an Answer: ')
-    print(i, end= '')
+    print(i, end='')
 
     while i >= 0:
         i -= 1
         time.sleep(1)  # sleep one second
         if count is False:
             break
-        print('\r' + str(i) + ' ', end = '', flush=True) #update timer
+        print('\r' + str(i) + ' ', end='', flush=True)  # update timer
 
 
 # display categories
@@ -80,8 +80,9 @@ def get_category():
     print_categories()
     categories = ['arts_and_literature', 'film_and_tv',
                   'food_and_drink', 'general_knowledge', 'geography',
-                  'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
-    
+                  'history', 'music', 'science', 'society_and_culture', 
+                  'sports_and_leisure']
+
     # get response and check if it is an integer
     check_integer = True
     while check_integer:
@@ -97,11 +98,11 @@ def get_category():
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
     
-    difficulty_choices = {"1": "easy", "2": "medium" , "3": "hard"}
+    difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
 
     chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-      chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
+        chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
     
     difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
     return difficulty
@@ -162,8 +163,8 @@ def run_quiz(quiz, total):
             correct = 'c'
         else:
             correct = 'd'
-          
-        # prompt user to select an option    
+
+        # prompt user to select an option
         print(f" (a) {a}")
         print(f" (b) {b}")
         print(f" (c) {c}")
@@ -193,7 +194,7 @@ def run_quiz(quiz, total):
             print(f"Correct Answer: {i['correctAnswer']}")
         print("********************************")
         time.sleep(2)
-        count = True;
+        count = True
         
     print(f"Your Score is: {score}/{total}")
     print()
@@ -259,7 +260,7 @@ def revisit():
 
     # randomly choose until we have 10 (or less if not possible)
     random_questions = []
-    while len(random_questions)<10 and len(questions)>0:
+    while len(random_questions) < 10 and len(questions) > 0:
         q = questions.pop(random.randint(0, len(questions)-1))
         random_questions.append(q)
     return random_questions
