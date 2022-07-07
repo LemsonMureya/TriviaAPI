@@ -103,24 +103,19 @@ def get_category():
 
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
-
-    difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
-
-    chosen_difficulty = input("Please select difficulty."
-                              "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
-    while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-        chosen_difficulty = int(input("Please select difficulty. 1-3 \n"
-                                      " 1. Easy \n 2. Medium \n"
-                                      " 3. Hard \n : "))
-
-    # gets the corresponing difficulty level// test for invalid input
-    difficulty = difficulty_choices.get(chosen_difficulty)
+    choices = { "1": "easy", "2": "medium" , "3": "hard"}
+    check_difficulty = True
+    while check_difficulty:
+        try:
+            chosen = input("Choose difficulty. \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+            difficulty = choices[chosen] 
+            check_difficulty = False
+        except:
+            print('Please input a number 1-3')
     return difficulty
-
 
 # get input on the number of questions and return it
 def get_questions():
-
     question = input("How many questions would you like to answer?: 1-20 ")
     while int(question) > 21 or int(question) < 0:
         question = input("How many questions would you like to answer?: 1-20 ")
@@ -235,7 +230,10 @@ def make_database(data):
     # create database
     engine = db.create_engine('sqlite:///trivia.db')
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
 
+def update_database(data):
+    pass
 
 def update_database(data):
     # create dataframe
