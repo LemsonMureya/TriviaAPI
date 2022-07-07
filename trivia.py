@@ -60,6 +60,7 @@ def func1(x):
 def func2(x, y):
     return x + y
 
+
 # global variable used for the countdown
 count = True
 # run the countdown for each question
@@ -105,7 +106,9 @@ def get_category():
             response = int(response)
             category = categories[response]  # use index to get category
             check_integer = False  # end the loop if successful
-        except:  # input is not int or not in the range 0-9, continue loop
+
+        # if input is not int or not in the range 0-9, continue loop
+        except(IndexError, ValueError):
             print('Please input a number 0-9')
     return category
 
@@ -115,11 +118,12 @@ def get_difficulty():
 
     difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
 
-    chosen_difficulty = input("Please select difficulty." 
-                            + "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+    chosen_difficulty = input("Please select difficulty."
+                              "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-        chosen_difficulty = int(input("Please select difficulty. 1-3 \n" 
-                                    " 1. Easy \n 2. Medium \n 3. Hard \n : "))
+        chosen_difficulty = int(input("Please select difficulty. 1-3 \n"
+                                      " 1. Easy \n 2. Medium \n"
+                                      " 3. Hard \n : "))
 
     # gets the corresponing difficulty level// test for invalid input
     difficulty = difficulty_choices.get(chosen_difficulty)
@@ -196,34 +200,33 @@ def run_quiz(quiz, total):
         # start the countdown
         t = Thread(target=runn)
         t.start()
-      
+
         # the user has 15 seconds and can only select a,b,c,d, or q
         answer, timedOut = timedKey(timeout=16, allowCharacters='abcdq')
         count = False
         print()
 
         # test if user gives correct input,
-        if timedOut: # if ran out of time
+        if timedOut:  # if ran out of time
             print("Sorry you ran out of time!")
             print(f"Correct Answer: {i['correctAnswer']}")
-        elif answer == correct: # if correct
+        elif answer == correct:  # if correct
             score += 1
             print("Congratulations you are correct!")
-
-        elif answer == 'q': # to quit
+        elif answer == 'q':  # to quit
             break
-        else: # if incorrect
+        else:  # if incorrect
             print("Wrong! :(")
             print(f"Correct Answer: {i['correctAnswer']}")
         print("********************************")
         time.sleep(2)
         count = True
-        
+
     print(f"Your Score is: {score}/{total}")
     print()
 
 
-# takes user response, and the correct answer? 
+# takes user response, and the correct answer?
 # (may not be needed)
 def compare_answers(response, correct_answer):
     pass
@@ -235,7 +238,7 @@ def make_database(data):
     for question in data:
         incorrect = question['incorrectAnswers']
         question['incorrectAnswers'] = incorrect[0] + '*' \
-                                     + incorrect[1] + '*' + incorrect[2]
+            + incorrect[1] + '*' + incorrect[2]
     df = pd.DataFrame(data)
 
     # remove unnecessary parts
@@ -244,12 +247,11 @@ def make_database(data):
     del df['tags']
     del df['difficulty']
     del df['regions']
-    
+
     # create database
     engine = db.create_engine('sqlite:///trivia.db')
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
-    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
-    print(pd.DataFrame(query_result))
+
 
 def update_database(data):
     pass
@@ -260,7 +262,7 @@ def update_database(data):
     for question in data:
         incorrect = question['incorrectAnswers']
         question['incorrectAnswers'] = incorrect[0] + '*' \
-                                     + incorrect[1] + '*' + incorrect[2]
+            + incorrect[1] + '*' + incorrect[2]
     df = pd.DataFrame(data)
 
     # remove unnecessary parts
@@ -269,7 +271,7 @@ def update_database(data):
     del df['tags']
     del df['difficulty']
     del df['regions']
-    
+
     # update database
     engine = db.create_engine('sqlite:///trivia.db')
     df.to_sql('past_questions', con=engine, if_exists='append', index=False)
@@ -296,17 +298,19 @@ def revisit():
         random_questions.append(q)
     return random_questions
 
+
 if __name__ == '__main__':
     first_run = True  # boolean to determine if this is the first run
     while True:
         # different menu options for first run vs not first run
         if not first_run:
-            print('Choose an option and press enter:' \
-                + '\n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
+            print('Choose an option and press enter:'
+                  '\n "n" to begin a new quiz \n "r"'
+                  'to revist past questions \n "q" to quit')
             option = input("option:")
         else:
-            print('Choose an option and press enter: ' \
-                + '\n "n" to begin a new quiz \n "q" to quit ')
+            print('Choose an option and press enter: '
+                  '\n "n" to begin a new quiz \n "q" to quit ')
             option = input("option:")
 
         # revisitng past questions
@@ -315,7 +319,7 @@ if __name__ == '__main__':
             run_quiz(quiz, len(quiz))
         elif option == 'q':
             break
-        else: # new
+        else:  # new
             category = get_category()
             difficulty = get_difficulty()
             questions = get_questions()
@@ -323,8 +327,8 @@ if __name__ == '__main__':
             run_quiz(quiz, int(questions))
 
             if first_run:
-                make_database(copy.deepcopy(quiz))  
-                first_run = False  
+                make_database(copy.deepcopy(quiz))
+                first_run = False
             else:
                 update_database(copy.deepcopy(quiz))
 
