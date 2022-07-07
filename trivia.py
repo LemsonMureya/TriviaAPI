@@ -285,7 +285,7 @@ if __name__ == '__main__':
         # different menu options for first run vs not first run
         if not first_run:
             print('Choose an option and press enter:'
-                  '\n "n" to begin a new quiz \n "r"'
+                  '\n "n" to begin a new quiz \n "r" '
                   'to revist past questions \n "q" to quit')
             option = input("option:")
         else:
