@@ -283,15 +283,22 @@ if __name__ == '__main__':
     first_run = True  # boolean to determine if this is the first run
     while True:
         # different menu options for first run vs not first run
+        run = True
         if not first_run:
-            print('Choose an option and press enter:'
-                  '\n "n" to begin a new quiz \n "r" '
-                  'to revist past questions \n "q" to quit')
-            option = input("option:")
+            while run:
+                print('Choose an option and press enter:'
+                    '\n "n" to begin a new quiz \n "r" '
+                    'to revist past questions \n "q" to quit')
+                option = input("option:")
+                if option in 'nqr':
+                    run = False
         else:
-            print('Choose an option and press enter: '
-                  '\n "n" to begin a new quiz \n "q" to quit ')
-            option = input("option:")
+            while run:
+                print('Choose an option and press enter: '
+                    '\n "n" to begin a new quiz \n "q" to quit ')
+                option = input("option:")
+                if option in 'nq':
+                    run = False
 
         # revisitng past questions
         if option == 'r':
