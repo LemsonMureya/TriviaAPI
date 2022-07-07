@@ -103,11 +103,11 @@ def get_difficulty():
 
     difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
 
-    chosen_difficulty = input("Please select difficulty." \
-    + "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+    chosen_difficulty = input("Please select difficulty." 
+                            + "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-        chosen_difficulty = int(input("Please select difficulty. 1-3 \n" \
-        " 1. Easy \n 2. Medium \n 3. Hard \n : "))
+        chosen_difficulty = int(input("Please select difficulty. 1-3 \n" 
+                                    " 1. Easy \n 2. Medium \n 3. Hard \n : "))
 
     # gets the corresponing difficulty level// test for invalid input
     difficulty = difficulty_choices.get(chosen_difficulty)
@@ -116,7 +116,7 @@ def get_difficulty():
 
 # get input on the number of questions and return it
 def get_questions():
-    
+
     question = input("How many questions would you like to answer?: 1-20 ")
     while int(question) > 21 or int(question) < 0:
         question = input("How many questions would you like to answer?: 1-20 ")
@@ -138,12 +138,12 @@ def create_quiz(category, difficulty, questions):
 def run_quiz(quiz, total):
     score = 0
     total = total
-    global count # boolean used for countdown
+    global count  # boolean used for countdown
 
     for i in quiz:
         print()
         print("********************************")
-        print(f"Score : {score} / {total}")  
+        print(f"Score : {score} / {total}")
 
         # print question
         print(i['question'])
@@ -182,7 +182,7 @@ def run_quiz(quiz, total):
         t.start()
       
         # the user has 15 seconds and can only select a,b,c,d, or q
-        answer, timedOut = timedKey(timeout = 16, allowCharacters = 'abcdq')
+        answer, timedOut = timedKey(timeout=16, allowCharacters='abcdq')
         count = False
         print()
 
@@ -212,11 +212,13 @@ def compare_answers(response, correct_answer):
     pass
     # print the many different responses
 
+
 def make_database(data):
     # create dataframe
     for question in data:
         incorrect = question['incorrectAnswers']
-        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+        question['incorrectAnswers'] = incorrect[0] + '*' \
+                                     + incorrect[1] + '*' + incorrect[2]
     df = pd.DataFrame(data)
 
     # remove unnecessary parts
@@ -235,7 +237,8 @@ def update_database(data):
     # create dataframe
     for question in data:
         incorrect = question['incorrectAnswers']
-        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+        question['incorrectAnswers'] = incorrect[0] + '*' \
+                                     + incorrect[1] + '*' + incorrect[2]
     df = pd.DataFrame(data)
 
     # remove unnecessary parts
@@ -290,7 +293,7 @@ if __name__ == '__main__':
             run_quiz(quiz, len(quiz))
         elif option == 'q':
             break
-        else: #new
+        else: # new
             category = get_category()
             difficulty = get_difficulty()
             questions = get_questions()
