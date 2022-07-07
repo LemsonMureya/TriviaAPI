@@ -49,6 +49,8 @@ def func2(x, y):
 # global variable used for the countdown
 count = True
 # run the countdown for each question
+
+
 def runn():
     i = 15
     print('Choose an Answer: ')
@@ -80,7 +82,7 @@ def get_category():
     print_categories()
     categories = ['arts_and_literature', 'film_and_tv',
                   'food_and_drink', 'general_knowledge', 'geography',
-                  'history', 'music', 'science', 'society_and_culture', 
+                  'history', 'music', 'science', 'society_and_culture',
                   'sports_and_leisure']
 
     # get response and check if it is an integer
@@ -89,22 +91,22 @@ def get_category():
         try:
             response = input("Please choose a category and press enter: ")
             response = int(response)
-            category = categories[response]  # if int, use as index to get category
+            category = categories[response]  # use index to get category
             check_integer = False  # end the loop if successful
-        except:  # if the input is not a number or not in the range 0-9, continue loop
+        except:  # input is not int or not in the range 0-9, continue loop
             print('Please input a number 0-9')
     return category
 
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
-    
+
     difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
 
     chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
         chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
     
-    difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
+    difficulty = difficulty_choices.get(chosen_difficulty) # gets the corresponing difficulty level// test for invalid input
     return difficulty
 
 
@@ -113,7 +115,7 @@ def get_questions():
     
     question = input("How many questions would you like to answer?: 1-20 ")
     while int(question) > 21 or int(question) < 0:
-      question = input("How many questions would you like to answer?: 1-20 ")
+        question = input("How many questions would you like to answer?: 1-20 ")
     questions = str(question)
     return questions
 
@@ -172,7 +174,7 @@ def run_quiz(quiz, total):
         print(f" press \"q\" to quit")
 
         # start the countdown
-        t = Thread(target = runn)
+        t = Thread(target=runn)
         t.start()
       
         # the user has 15 seconds and can only select a,b,c,d, or q
@@ -291,6 +293,6 @@ if __name__ == '__main__':
 
             if first_run:
                 make_database(copy.deepcopy(quiz))  
-                first_run=False  
+                first_run = False  
             else:
                 update_database(copy.deepcopy(quiz))
