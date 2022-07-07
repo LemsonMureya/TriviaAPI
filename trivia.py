@@ -97,16 +97,20 @@ def get_category():
             print('Please input a number 0-9')
     return category
 
+
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
 
     difficulty_choices = {"1": "easy", "2": "medium", "3": "hard"}
 
-    chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
+    chosen_difficulty = input("Please select difficulty." \
+    + "1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
-        chosen_difficulty = int(input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : "))
-    
-    difficulty = difficulty_choices.get(chosen_difficulty) # gets the corresponing difficulty level// test for invalid input
+        chosen_difficulty = int(input("Please select difficulty. 1-3 \n" \
+        " 1. Easy \n 2. Medium \n 3. Hard \n : "))
+
+    # gets the corresponing difficulty level// test for invalid input
+    difficulty = difficulty_choices.get(chosen_difficulty)
     return difficulty
 
 
@@ -134,12 +138,12 @@ def create_quiz(category, difficulty, questions):
 def run_quiz(quiz, total):
     score = 0
     total = total
-    global count #boolean used for countdown
+    global count # boolean used for countdown
 
     for i in quiz:
         print()
         print("********************************")
-        print(f"Score : {score} / {total}")  # change this, it will not always be out of 10
+        print(f"Score : {score} / {total}")  
 
         # print question
         print(i['question'])
@@ -178,7 +182,7 @@ def run_quiz(quiz, total):
         t.start()
       
         # the user has 15 seconds and can only select a,b,c,d, or q
-        answer, timedOut = timedKey(timeout = 16, allowCharacters = 'abcdq') 
+        answer, timedOut = timedKey(timeout = 16, allowCharacters = 'abcdq')
         count = False
         print()
 
@@ -190,7 +194,7 @@ def run_quiz(quiz, total):
             score += 1
             print("Congratulations you are correct!")
         elif answer == 'q': # to quit
-          break
+            break
         else: # if incorrect
             print("Wrong! :(")
             print(f"Correct Answer: {i['correctAnswer']}")
@@ -272,10 +276,12 @@ if __name__ == '__main__':
     while True:
         # different menu options for first run vs not first run
         if not first_run:
-            print('Choose an option and press enter: \n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
+            print('Choose an option and press enter:' \
+                + '\n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
             option = input("option:")
         else:
-            print('Choose an option and press enter: \n "n" to begin a new quiz \n "q" to quit ')
+            print('Choose an option and press enter: ' \
+                + '\n "n" to begin a new quiz \n "q" to quit ')
             option = input("option:")
 
         # revisitng past questions
