@@ -4,9 +4,11 @@ import time
 from threading import Thread
 from pytimedinput import timedInput
 from pytimedinput import timedKey
+
 import sqlalchemy as db
 import pandas as pd
 import copy
+
 # install pytimedinput!!!
 
 # https://the-trivia-api.com/
@@ -25,7 +27,19 @@ import copy
 # iterate through each question's dictionary
 
 # this is an example url and quiz
+# url = 'https://the-trivia-api.com/api/questions?categories=science&limit=10&region=US&difficulty=medium'
+# response = requests.get(url)
+# data = response.json()
+# score = 0
+# total = 10 
+# # end of example
 
+
+
+# Testing function examples
+# def func1(x):
+#   x = x-1
+#   return x
 
 # url = 'https://the-trivia-api.com/api/' \
 # + 'questions?categories=science&limit=10&region=US&difficulty=medium'
@@ -38,10 +52,10 @@ import copy
 
 # Testing function examples
 
+
 def func1(x):
     x = x - 1
     return x
-
 
 def func2(x, y):
     return x + y
@@ -76,16 +90,14 @@ def print_categories():
 
       ''')
 
-
 # get category selection and return it
 def get_category():
     print_categories()
-    categories = ['arts_and_literature', 'film_and_tv',
-                  'food_and_drink', 'general_knowledge', 'geography',
-                  'history', 'music', 'science', 'society_and_culture',
-                  'sports_and_leisure']
+    categories = ['arts_and_literature', 'film_and_tv', 'food_and_drink', 'general_knowledge', 'geography',
 
-    # get response and check if it is an integer
+        'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
+    
+    #get response and check if it is an integer
     check_integer = True
     while check_integer:
         try:
@@ -129,6 +141,10 @@ def create_quiz(category, difficulty, questions):
     url = 'https://the-trivia-api.com/api/questions?categories=' \
         + category + '&limit=' \
         + questions + '&region=US&difficulty=' + difficulty
+    response = requests.get(url)
+    data = response.json()
+    return data
+
     response = requests.get(url)
     data = response.json()
     return data
@@ -193,6 +209,7 @@ def run_quiz(quiz, total):
         elif answer == correct: # if correct
             score += 1
             print("Congratulations you are correct!")
+
         elif answer == 'q': # to quit
             break
         else: # if incorrect
@@ -231,7 +248,12 @@ def make_database(data):
     # create database
     engine = db.create_engine('sqlite:///trivia.db')
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
-    
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
+    print(pd.DataFrame(query_result))
+
+def update_database(data):
+    pass
+   
 
 def update_database(data):
     # create dataframe
@@ -305,3 +327,4 @@ if __name__ == '__main__':
                 first_run = False  
             else:
                 update_database(copy.deepcopy(quiz))
+
