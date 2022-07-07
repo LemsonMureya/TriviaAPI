@@ -103,21 +103,23 @@ def get_category():
 
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
-    choices = { "1": "easy", "2": "medium" , "3": "hard"}
+    choices = {"1": "easy", "2": "medium", "3": "hard"}
     check_difficulty = True
     while check_difficulty:
         try:
-            chosen = input("Choose difficulty. \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
-            difficulty = choices[chosen] 
+            chosen = input("Choose difficulty. \n"
+                           " 1. Easy \n 2. Medium \n 3. Hard \n : ")
+            difficulty = choices[chosen]
             check_difficulty = False
-        except:
+        except KeyError:
             print('Please input a number 1-3')
     return difficulty
+
 
 # get input on the number of questions and return it
 def get_questions():
     question = input("How many questions would you like to answer?: 1-20 ")
-    while int(question) > 21 or int(question) < 0:
+    while not question.isnumeric() or int(question) > 21 or int(question) < 0:
         question = input("How many questions would you like to answer?: 1-20 ")
     questions = str(question)
     return questions
@@ -232,8 +234,6 @@ def make_database(data):
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
     query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
 
-def update_database(data):
-    pass
 
 def update_database(data):
     # create dataframe
@@ -285,15 +285,15 @@ if __name__ == '__main__':
         if not first_run:
             while run:
                 print('Choose an option and press enter:'
-                    '\n "n" to begin a new quiz \n "r" '
-                    'to revist past questions \n "q" to quit')
+                      '\n "n" to begin a new quiz \n "r" '
+                      'to revist past questions \n "q" to quit')
                 option = input("option:")
                 if option in 'nqr':
                     run = False
         else:
             while run:
                 print('Choose an option and press enter: '
-                    '\n "n" to begin a new quiz \n "q" to quit ')
+                      '\n "n" to begin a new quiz \n "q" to quit ')
                 option = input("option:")
                 if option in 'nq':
                     run = False
