@@ -42,22 +42,23 @@ def func1(x):
     x = x - 1
     return x
 
+
 def func2(x, y):
     return x + y
 
 # global variable used for the countdown
-count = True 
+count = True
 # run the countdown for each question
 def runn():
     i = 15
     print('Choose an Answer: ')
-    print(i, end = '')
+    print(i, end= '')
 
     while i >= 0:
         i -= 1
-        time.sleep(1) #sleep one second
-        if count == False:
-          break
+        time.sleep(1)  # sleep one second
+        if count is False:
+            break
         print('\r' + str(i) + ' ', end = '', flush=True) #update timer
 
 
@@ -77,14 +78,15 @@ def print_categories():
 # get category selection and return it
 def get_category():
     print_categories()
-    categories = ['arts_and_literature', 'film_and_tv', 'food_and_drink', 'general_knowledge', 'geography',
+    categories = ['arts_and_literature', 'film_and_tv',
+                  'food_and_drink', 'general_knowledge', 'geography',
                   'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
     
     # get response and check if it is an integer
     check_integer = True
     while check_integer:
         try:
-            response = input("Please choose a category: ")
+            response = input("Please choose a category and press enter: ")
             response = int(response)
             category = categories[response]  # if int, use as index to get category
             check_integer = False  # end the loop if successful
@@ -95,7 +97,7 @@ def get_category():
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
     
-    difficulty_choices = { "1": "easy", "2": "medium" , "3": "hard"}
+    difficulty_choices = {"1": "easy", "2": "medium" , "3": "hard"}
 
     chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
@@ -136,7 +138,7 @@ def run_quiz(quiz, total):
         print("********************************")
         print(f"Score : {score} / {total}")  # change this, it will not always be out of 10
 
-        # print question    
+        # print question
         print(i['question'])
 
         # list all answer choices
@@ -185,7 +187,7 @@ def run_quiz(quiz, total):
             score += 1
             print("Congratulations you are correct!")
         elif answer == 'q': # to quit
-          break;
+          break
         else: # if incorrect
             print("Wrong! :(")
             print(f"Correct Answer: {i['correctAnswer']}")
@@ -194,6 +196,7 @@ def run_quiz(quiz, total):
         count = True;
         
     print(f"Your Score is: {score}/{total}")
+    print()
 
 
 # takes user response, and the correct answer? 
@@ -245,7 +248,7 @@ def revisit():
     query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
     questions = []
 
-    #create dictionaries from query result to add to the list of questions
+    # create dictionaries from query result to add to the list of questions
     for question in query_result:
         d = {}
         d['correctAnswer'] = question[1]
@@ -254,21 +257,23 @@ def revisit():
         d['question'] = question[3]
         questions.append(d)
 
-    #randomly delete questions until we are left with 10 (if there are more)
-    while len(questions)>10:
-        del questions[random.randint(0, len(questions)-1)]
-    return questions
+    # randomly choose until we have 10 (or less if not possible)
+    random_questions = []
+    while len(random_questions)<10 and len(questions)>0:
+        q = questions.pop(random.randint(0, len(questions)-1))
+        random_questions.append(q)
+    return random_questions
 
 if __name__ == '__main__':
     first_run = True  # boolean to determine if this is the first run
     while True:
-        # differnt menu options for first run vs not first run
+        # different menu options for first run vs not first run
         if not first_run:
-            print('Enter: \n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
-            option = input()
+            print('Choose an option and press enter: \n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
+            option = input("option:")
         else:
-            print('Enter: \n "n" to begin a new quiz \n "q" to quit ')
-            option = input()
+            print('Choose an option and press enter: \n "n" to begin a new quiz \n "q" to quit ')
+            option = input("option:")
 
         # revisitng past questions
         if option == 'r':
