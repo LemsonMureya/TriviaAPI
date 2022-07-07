@@ -63,7 +63,7 @@ def func1(x):
 def func2(x, y):
     return x + y
 
-# # global variable used for the countdown
+# global variable used for the countdown
 count = True 
 # run the countdown for each question
 def runn():
@@ -71,12 +71,13 @@ def runn():
     print('Choose an Answer: ')
     print(i, end = '')
 
-    while i>=0:
-        i-=1
+    while i >= 0:
+        i -= 1
         time.sleep(1) #sleep one second
         if count == False:
-          break;
-        print('\r'+str(i)+ ' ', end='', flush=True) #update timer
+          break
+        print('\r' + str(i) + ' ', end = '', flush=True) #update timer
+
 
 # display categories
 def print_categories():
@@ -116,7 +117,7 @@ def get_category():
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
     
-    difficulty_choices = { "1": "easy", "2" : "medium" , "3" : "hard"}
+    difficulty_choices = { "1": "easy", "2": "medium" , "3": "hard"}
 
     chosen_difficulty = input("Please select difficulty. 1-3 \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
     while int(chosen_difficulty) > 3 or int(chosen_difficulty) < 0:
@@ -124,6 +125,8 @@ def get_difficulty():
     
     difficulty = difficulty_choices.get(chosen_difficulty) #gets the corresponing difficulty level// test for invalid input
     return difficulty
+
+
 # get input on the number of questions and return it
 def get_questions():
     
@@ -133,20 +136,25 @@ def get_questions():
     questions = str(question)
     return questions
 
+
 # create the quiz and returns the list of questions
 def create_quiz(category, difficulty, questions):
     url = 'https://the-trivia-api.com/api/questions?categories=' \
-    + category +'&limit=' \
-    + questions + '&region=US&difficulty=' + difficulty
+        + category + '&limit=' \
+        + questions + '&region=US&difficulty=' + difficulty
+    response = requests.get(url)
+    data = response.json()
+    return data
+
     response = requests.get(url)
     data = response.json()
     return data
 
 
 # takes the list of questions as parameter and runs the quiz
-def run_quiz(quiz,total):
+def run_quiz(quiz, total):
     score = 0
-    total = questions
+    total = total
     global count #boolean used for countdown
 
     for i in quiz:
@@ -187,11 +195,11 @@ def run_quiz(quiz,total):
         print(f" press \"q\" to quit")
 
         # start the countdown
-        t = Thread(target=runn)
+        t = Thread(target = runn)
         t.start()
       
         # the user has 15 seconds and can only select a,b,c,d, or q
-        answer, timedOut = timedKey(timeout = 16, allowCharacters='abcdq') 
+        answer, timedOut = timedKey(timeout = 16, allowCharacters = 'abcdq') 
         count = False
         print()
 
@@ -200,7 +208,7 @@ def run_quiz(quiz,total):
             print("Sorry you ran out of time!")
             print(f"Correct Answer: {i['correctAnswer']}")
         elif answer == correct: # if correct
-            score+=1
+            score += 1
             print("Congratulations you are correct!")
 
         elif answer == 'q': # to quit
@@ -222,17 +230,20 @@ def compare_answers(response, correct_answer):
     # print the many different responses
 
 def make_database(data):
+    # create dataframe
     for question in data:
         incorrect = question['incorrectAnswers']
         question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
     df = pd.DataFrame(data)
+
+    # remove unnecessary parts
     del df['type']
     del df['id']
     del df['tags']
     del df['difficulty']
     del df['regions']
     
-    #print(df)
+    # create database
     engine = db.create_engine('sqlite:///trivia.db')
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
     query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
@@ -245,13 +256,83 @@ def update_database(data):
 
 
 
+# if __name__ == '__main__':
+#     # testing 
+#     category = get_category()
+#     difficulty = get_difficulty()
+#     questions = get_questions()
+#     quiz = create_quiz(category, difficulty, questions)
+#     # quiz = create_quiz('arts_and_literature', 'easy', '10')
+#     run_quiz(quiz, int(questions))
+#     make_database(copy.deepcopy(quiz))
+
+
+
+def update_database(data):
+    # create dataframe
+    for question in data:
+        incorrect = question['incorrectAnswers']
+        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+    df = pd.DataFrame(data)
+
+    # remove unnecessary parts
+    del df['type']
+    del df['id']
+    del df['tags']
+    del df['difficulty']
+    del df['regions']
+    
+    # update database
+    engine = db.create_engine('sqlite:///trivia.db')
+    df.to_sql('past_questions', con=engine, if_exists='append', index=False)
+
+
+def revisit():
+    engine = db.create_engine('sqlite:///trivia.db')
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
+    questions = []
+
+    #create dictionaries from query result to add to the list of questions
+    for question in query_result:
+        d = {}
+        d['correctAnswer'] = question[1]
+        incorrectAnswers = question[2].split('*')
+        d['incorrectAnswers'] = incorrectAnswers
+        d['question'] = question[3]
+        questions.append(d)
+
+    #randomly delete questions until we are left with 10 (if there are more)
+    while len(questions)>10:
+        del questions[random.randint(0, len(questions)-1)]
+    return questions
+
 if __name__ == '__main__':
-    # testing 
-    category = get_category()
-    difficulty = get_difficulty()
-    questions = get_questions()
-    quiz = create_quiz(category, difficulty, questions)
-    # quiz = create_quiz('arts_and_literature', 'easy', '10')
-    run_quiz(quiz, int(questions))
-    make_database(copy.deepcopy(quiz))
+    first_run = True  # boolean to determine if this is the first run
+    while True:
+        # differnt menu options for first run vs not first run
+        if not first_run:
+            print('Enter: \n "n" to begin a new quiz \n "r" to revist past questions \n "q" to quit')
+            option = input()
+        else:
+            print('Enter: \n "n" to begin a new quiz \n "q" to quit ')
+            option = input()
+
+        # revisitng past questions
+        if option == 'r':
+            quiz = revisit()
+            run_quiz(quiz, len(quiz))
+        elif option == 'q':
+            break
+        else: #new
+            category = get_category()
+            difficulty = get_difficulty()
+            questions = get_questions()
+            quiz = create_quiz(category, difficulty, questions)
+            run_quiz(quiz, int(questions))
+
+            if first_run:
+                make_database(copy.deepcopy(quiz))  
+                first_run=False  
+            else:
+                update_database(copy.deepcopy(quiz))
 
