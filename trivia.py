@@ -4,6 +4,11 @@ import time
 from threading import Thread
 from pytimedinput import timedInput
 from pytimedinput import timedKey
+
+import sqlalchemy as db
+import pandas as pd
+import copy
+
 # install pytimedinput!!!
 
 # https://the-trivia-api.com/
@@ -36,17 +41,36 @@ from pytimedinput import timedKey
 #   x = x-1
 #   return x
 
+# url = 'https://the-trivia-api.com/api/' \
+# + 'questions?categories=science&limit=10&region=US&difficulty=medium'
+# response = requests.get(url)
+# data = response.json()
+# score = 0
+# total = 10
+# # end of example
+
+
+# Testing function examples
+
+
+def func1(x):
+    x = x - 1
+    return x
 
 # def func2(x,y):
 #   return x+y
+
+def func2(x, y):
+    return x + y
 
 # # global variable used for the countdown
 count = True 
 # run the countdown for each question
 def runn():
-    i=15
+    i = 15
     print('Choose an Answer: ')
     print(i, end = '')
+
     while i>=0:
         i-=1
         time.sleep(1) #sleep one second
@@ -65,24 +89,36 @@ def print_categories():
       4- Geography               9- Sports & Leisure
 
       ''')
-  
 
 # get category selection and return it
 def get_category():
     print_categories()
     categories = ['arts_and_literature', 'film_and_tv', 'food_and_drink', 'general_knowledge', 'geography',
+
         'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
     
     #get response and check if it is an integer
+
+                  'history', 'music', 'science', 'society_and_culture', 'sports_and_leisure']
+    
+    # get response and check if it is an integer
+
     check_integer = True
     while check_integer:
         try:
             response = input("Please choose a category: ")
             response = int(response)
+
             category = categories[response] #if int, use as index to get category
             check_integer = False #end the loop if successful
         except: # if the input is not a number or not in the range 0-9, continue loop
               print('Please input a number 0-9')
+
+            category = categories[response]  # if int, use as index to get category
+            check_integer = False  # end the loop if successful
+        except:  # if the input is not a number or not in the range 0-9, continue loop
+            print('Please input a number 0-9')
+
     return category
 
 # get the difficulty (easy, medium, hard) and return it
@@ -108,8 +144,13 @@ def get_questions():
 # create the quiz and returns the list of questions
 def create_quiz(category, difficulty, questions):
     url = 'https://the-trivia-api.com/api/questions?categories=' \
+
     + category +'&limit=' \
     + questions + '&region=US&difficulty=' + difficulty
+
+        + category +'&limit=' \
+        + questions + '&region=US&difficulty=' + difficulty
+
     response = requests.get(url)
     data = response.json()
     return data
@@ -120,6 +161,7 @@ def run_quiz(quiz,total):
     score = 0
     total = questions
     global count #boolean used for countdown
+
     for i in quiz:
         print()
         print("********************************")
@@ -173,9 +215,11 @@ def run_quiz(quiz,total):
         elif answer == correct: # if correct
             score+=1
             print("Congratulations you are correct!")
-        elif answer == 'q': #to quit
+
+        elif answer == 'q': # to quit
           break;
-        else: #if incorrect
+        else: # if incorrect
+
             print("Wrong! :(")
             print(f"Correct Answer: {i['correctAnswer']}")
         print("********************************")
@@ -191,6 +235,25 @@ def compare_answers(response, correct_answer):
     pass
     # print the many different responses
 
+def make_database(data):
+    for question in data:
+        incorrect = question['incorrectAnswers']
+        question['incorrectAnswers'] = incorrect[0] + '*' + incorrect[1] + '*' + incorrect[2]
+    df = pd.DataFrame(data)
+    del df['type']
+    del df['id']
+    del df['tags']
+    del df['difficulty']
+    del df['regions']
+    
+    #print(df)
+    engine = db.create_engine('sqlite:///trivia.db')
+    df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
+    query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
+    # print(pd.DataFrame(query_result))
+
+def update_database(data):
+    pass
 
 if __name__ == '__main__':
     # testing 
@@ -199,5 +262,10 @@ if __name__ == '__main__':
     questions = get_questions()
     quiz = create_quiz(category, difficulty, questions)
     # quiz = create_quiz('arts_and_literature', 'easy', '10')
+
     #run_quiz(quiz, int(questions))
-    run_quiz(quiz, questions)
+ 
+
+    run_quiz(quiz, int(questions))
+    make_database(copy.deepcopy(quiz))
+
