@@ -81,22 +81,22 @@ def print_categories():
 # get category selection and return it
 def get_category():
     print_categories()
-    categories = ['arts_and_literature', 'film_and_tv',
-                  'food_and_drink', 'general_knowledge', 'geography',
-                  'history', 'music', 'science', 'society_and_culture',
-                  'sports_and_leisure']
+    categories = {'0': 'arts_and_literature', '1': 'film_and_tv',
+                  '2': 'food_and_drink', '3': 'general_knowledge',
+                  '4': 'geography', '5': 'history', '6': 'music',
+                  '7': 'science', '8': 'society_and_culture',
+                  '9': 'sports_and_leisure'}
 
     # get response and check if it is an integer
-    check_integer = True
-    while check_integer:
+    check_category = True
+    while check_category:
         try:
             response = input("Please choose a category and press enter: ")
-            response = int(response)
-            category = categories[response]  # use index to get category
-            check_integer = False  # end the loop if successful
+            category = categories[response]
+            check_category = False  # end the loop if successful
 
         # if input is not int or not in the range 0-9, continue loop
-        except(IndexError, ValueError):
+        except KeyError:
             print('Please input a number 0-9')
     return category
 
@@ -119,7 +119,7 @@ def get_difficulty():
 # get input on the number of questions and return it
 def get_questions():
     question = input("How many questions would you like to answer?: 1-20 ")
-    while not question.isnumeric() or int(question) > 21 or int(question) < 0:
+    while not question.isnumeric() or int(question) > 20 or int(question) <= 0:
         question = input("How many questions would you like to answer?: 1-20 ")
     questions = str(question)
     return questions
