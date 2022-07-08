@@ -81,43 +81,45 @@ def print_categories():
 # get category selection and return it
 def get_category():
     print_categories()
-    categories = ['arts_and_literature', 'film_and_tv',
-                  'food_and_drink', 'general_knowledge', 'geography',
-                  'history', 'music', 'science', 'society_and_culture',
-                  'sports_and_leisure']
+    categories = {'0': 'arts_and_literature', '1': 'film_and_tv',
+                  '2': 'food_and_drink', '3': 'general_knowledge',
+                  '4': 'geography', '5': 'history', '6': 'music',
+                  '7': 'science', '8': 'society_and_culture',
+                  '9': 'sports_and_leisure'}
 
     # get response and check if it is an integer
-    check_integer = True
-    while check_integer:
+    check_category = True
+    while check_category:
         try:
             response = input("Please choose a category and press enter: ")
-            response = int(response)
-            category = categories[response]  # use index to get category
-            check_integer = False  # end the loop if successful
+            category = categories[response]
+            check_category = False  # end the loop if successful
 
         # if input is not int or not in the range 0-9, continue loop
-        except(IndexError, ValueError):
+        except KeyError:
             print('Please input a number 0-9')
     return category
 
 
 # get the difficulty (easy, medium, hard) and return it
 def get_difficulty():
-    choices = { "1": "easy", "2": "medium" , "3": "hard"}
+    choices = {"1": "easy", "2": "medium", "3": "hard"}
     check_difficulty = True
     while check_difficulty:
         try:
-            chosen = input("Choose difficulty. \n 1. Easy \n 2. Medium \n 3. Hard \n : ")
-            difficulty = choices[chosen] 
+            chosen = input("Choose difficulty. \n"
+                           " 1. Easy \n 2. Medium \n 3. Hard \n : ")
+            difficulty = choices[chosen]
             check_difficulty = False
-        except:
+        except KeyError:
             print('Please input a number 1-3')
     return difficulty
+
 
 # get input on the number of questions and return it
 def get_questions():
     question = input("How many questions would you like to answer?: 1-20 ")
-    while int(question) > 21 or int(question) < 0:
+    while not question.isnumeric() or int(question) > 20 or int(question) <= 0:
         question = input("How many questions would you like to answer?: 1-20 ")
     questions = str(question)
     return questions
@@ -232,8 +234,6 @@ def make_database(data):
     df.to_sql('past_questions', con=engine, if_exists='replace', index=False)
     query_result = engine.execute("SELECT * FROM past_questions;").fetchall()
 
-def update_database(data):
-    pass
 
 def update_database(data):
     # create dataframe
@@ -281,15 +281,22 @@ if __name__ == '__main__':
     first_run = True  # boolean to determine if this is the first run
     while True:
         # different menu options for first run vs not first run
+        run = True
         if not first_run:
-            print('Choose an option and press enter:'
-                  '\n "n" to begin a new quiz \n "r" '
-                  'to revist past questions \n "q" to quit')
-            option = input("option:")
+            while run:
+                print('Choose an option and press enter:'
+                      '\n "n" to begin a new quiz \n "r" '
+                      'to revist past questions \n "q" to quit')
+                option = input("option:")
+                if option in 'nqr':
+                    run = False
         else:
-            print('Choose an option and press enter: '
-                  '\n "n" to begin a new quiz \n "q" to quit ')
-            option = input("option:")
+            while run:
+                print('Choose an option and press enter: '
+                      '\n "n" to begin a new quiz \n "q" to quit ')
+                option = input("option:")
+                if option in 'nq':
+                    run = False
 
         # revisitng past questions
         if option == 'r':
