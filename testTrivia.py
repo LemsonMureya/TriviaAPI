@@ -15,16 +15,16 @@ class TestTrivia(unittest.TestCase):
     #assertFalse -> to verify a condition
     #assertRaises -> to verify that a specific exception gets raised 
     def get_category():
-        self.assertTrue(str(1))
-        self.assertFalse(str(15)) 
+        self.assertEqual(get_category(), 'geography')
+        self.assertEqual(get_category(), 'history')
         
     def get_difficulty():
-        self.assertTrue(str(1))
-        self.assertFalse(str(4))
+        self.assertEqual(get_difficulty(), 'easy')
+        self.assertEqual(get_difficulty(), 'medium')
 
     def get_questions():
-        self.assertTrue(str(2))
-        self.assertFalse(str(23))
+        self.assertEqual(get_questions(), 2)
+        self.assertEqual(get_questions(), '4')
 
     # def make_database(data):
     #     pass
